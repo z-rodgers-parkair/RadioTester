@@ -12,7 +12,7 @@ namespace RadioTester
         private static System.Timers.Timer timer;
         private static readonly Random Rand = new Random();
 
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             string ip;
             while (true)
@@ -49,11 +49,11 @@ namespace RadioTester
 
         private static bool IsValidIPv4(string addr) => IPAddress.TryParse(addr, out var a) && a.AddressFamily == AddressFamily.InterNetwork;
 
-        private static void OnTimerElapsed(NetworkStream stream)
+        private static async Task OnTimerElapsed(NetworkStream stream)
         {
             try
             {
-                int priority = Rand.Next(0, 5);
+                int priority = Rand.Next(0, 8);
                 string eti = $"{Rand.Next(0, 100000)}h{Rand.Next(0, 60):D2}m";
                 int oldVolume = Rand.Next(0, 101);
                 int newVolume = Rand.Next(0, 101);
@@ -61,8 +61,8 @@ namespace RadioTester
                 string data = $"<{priority}>1 - T6-140317 - - - [t6@4969 eti=\"{eti}\"] Setting am.global_loudspeaker_volume changed from {oldVolume} to {newVolume}\n";
 
                 byte[] bytes = Encoding.UTF8.GetBytes(data);
-                stream.Write(bytes, 0, bytes.Length);
                 Console.WriteLine($"Sent at {DateTime.Now}: {data.TrimEnd()}");
+                stream.WriteAsync(bytes, 0, bytes.Length);
             }
             catch (Exception ex)
             {
