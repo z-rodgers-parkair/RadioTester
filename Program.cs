@@ -53,7 +53,7 @@ namespace RadioTester
         {
             try
             {
-                int priority = Rand.Next(0, 5);
+                int priority = Rand.Next(0, 8);
                 string eti = $"{Rand.Next(0, 100000)}h{Rand.Next(0, 60):D2}m";
                 int oldVolume = Rand.Next(0, 101);
                 int newVolume = Rand.Next(0, 101);
